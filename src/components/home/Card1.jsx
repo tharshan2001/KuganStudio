@@ -22,8 +22,8 @@ const Card1 = () => {
         { src: img1.src, alt: "fresh beets", colSpan: "col-span-3", rounded: "rounded-md" },
         { src: img3.src, alt: "asparagus", colSpan: "col-span-2 sm:col-span-1", rounded: "rounded-sm" },
         { src: img2.src, alt: "red veggies", colSpan: "col-span-4 sm:col-span-4", rounded: "rounded-lg" },
-        { src: img4.src, alt: "carrots", colSpan: "col-span-4 sm:col-span-3", rounded: "rounded-md" },
         { src: img4.src, alt: "carrots", colSpan: "col-span-4 sm:col-span-1", rounded: "rounded-md" },
+        { src: img4.src, alt: "carrots", colSpan: "col-span-4 sm:col-span-3", rounded: "rounded-md" },
       ]}
     />
   );

@@ -1,132 +1,199 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 
 const Carousel = ({ slides, autoPlay = true, autoPlayInterval = 3000 }) => {
-  const [currentIndex, setCurrentIndex] = useState(1); // start at 1 because of clone
-  const [isTransitioning, setIsTransitioning] = useState(true);
-  const [dragStartX, setDragStartX] = useState(null);
-  const [dragDiff, setDragDiff] = useState(0);
-
-  const slideRef = useRef(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [previousIndex, setPreviousIndex] = useState(-1);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [direction, setDirection] = useState("next");
+  
   const timeoutRef = useRef(null);
+  const containerRef = useRef(null);
 
   const totalSlides = slides.length;
-  const extendedSlides = [slides[totalSlides - 1], ...slides, slides[0]]; // clone last & first
 
-  const prevSlide = () => {
-    setCurrentIndex((prev) => prev - 1);
-    setIsTransitioning(true);
+  // Helper function to get the actual image source
+  const getImageSrc = (slide) => {
+    if (typeof slide === 'string') return slide;
+    if (slide?.src) return slide.src;
+    if (slide?.default) return slide.default;
+    return slide;
   };
 
-  const nextSlide = () => {
-    setCurrentIndex((prev) => prev + 1);
+  const nextSlide = useCallback(() => {
+    if (isTransitioning) return;
+    
+    setDirection("next");
     setIsTransitioning(true);
-  };
+    setPreviousIndex(currentIndex);
+    setCurrentIndex((prev) => (prev + 1) % totalSlides);
+  }, [currentIndex, totalSlides, isTransitioning]);
+
+  const prevSlide = useCallback(() => {
+    if (isTransitioning) return;
+    
+    setDirection("prev");
+    setIsTransitioning(true);
+    setPreviousIndex(currentIndex);
+    setCurrentIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
+  }, [currentIndex, totalSlides, isTransitioning]);
+
+  const goToSlide = useCallback((index) => {
+    if (isTransitioning || index === currentIndex) return;
+    
+    const newDirection = index > currentIndex ? "next" : "prev";
+    setDirection(newDirection);
+    setIsTransitioning(true);
+    setPreviousIndex(currentIndex);
+    setCurrentIndex(index);
+  }, [currentIndex, isTransitioning]);
 
   // Auto-play
   useEffect(() => {
-    if (!autoPlay) return;
-    timeoutRef.current = setTimeout(nextSlide, autoPlayInterval);
-    return () => clearTimeout(timeoutRef.current);
-  }, [currentIndex, autoPlay, autoPlayInterval]);
-
-  // Looping logic
-  const handleTransitionEnd = () => {
-    if (currentIndex === 0) {
-      setIsTransitioning(false);
-      setCurrentIndex(totalSlides);
-    } else if (currentIndex === totalSlides + 1) {
-      setIsTransitioning(false);
-      setCurrentIndex(1);
-    }
-  };
-
-  // Drag / Swipe handlers
-  const handleDragStart = (e) => {
-    setDragStartX(e.type === "touchstart" ? e.touches[0].clientX : e.clientX);
-    setIsTransitioning(false);
-  };
-
-  const handleDragMove = (e) => {
-    if (dragStartX === null) return;
-    const clientX = e.type === "touchmove" ? e.touches[0].clientX : e.clientX;
-    setDragDiff(clientX - dragStartX);
-  };
-
-  const handleDragEnd = () => {
-    if (dragDiff > 50) {
-      prevSlide();
-    } else if (dragDiff < -50) {
+    if (!autoPlay || isTransitioning) return;
+    
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    
+    timeoutRef.current = setTimeout(() => {
       nextSlide();
-    } else {
-      setIsTransitioning(true);
-    }
-    setDragStartX(null);
-    setDragDiff(0);
-  };
+    }, autoPlayInterval);
+
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, [currentIndex, autoPlay, autoPlayInterval, nextSlide, isTransitioning]);
+
+  // Handle transition end
+  useEffect(() => {
+    if (!isTransitioning) return;
+
+    const timer = setTimeout(() => {
+      setIsTransitioning(false);
+    }, 700); // Match transition duration
+
+    return () => clearTimeout(timer);
+  }, [isTransitioning]);
+
+  // Preload next and previous images
+  useEffect(() => {
+    const nextIndex = (currentIndex + 1) % totalSlides;
+    const prevIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+    
+    const preloadImage = (index) => {
+      const img = new Image();
+      img.src = getImageSrc(slides[index]);
+    };
+    
+    preloadImage(nextIndex);
+    preloadImage(prevIndex);
+  }, [currentIndex, slides, totalSlides]);
 
   return (
-    <div
-      className="relative w-full h-[700px] overflow-hidden"
-      onMouseDown={handleDragStart}
-      onMouseMove={handleDragMove}
-      onMouseUp={handleDragEnd}
-      onMouseLeave={handleDragEnd}
-      onTouchStart={handleDragStart}
-      onTouchMove={handleDragMove}
-      onTouchEnd={handleDragEnd}
+    <div 
+      ref={containerRef}
+      className="relative w-full h-screen bg-black overflow-hidden"
     >
-      <div
-        className={`flex ${isTransitioning ? "transition-transform duration-700" : ""}`}
-        style={{
-          transform: `translateX(calc(-${currentIndex * 100}% + ${dragDiff}px))`,
-        }}
-        onTransitionEnd={handleTransitionEnd}
-        ref={slideRef}
-      >
-        {extendedSlides.map((slide, index) => (
+      {/* Background color to prevent white flashes */}
+      <div className="absolute inset-0 bg-black z-0" />
+      
+      {/* All slides for cross-fade */}
+      {slides.map((slide, index) => {
+        const isActive = index === currentIndex;
+        const wasActive = index === previousIndex;
+        const isTransitioningOut = isTransitioning && wasActive;
+        const isTransitioningIn = isTransitioning && isActive;
+
+        let opacity = 0;
+        let zIndex = 0;
+        let scale = 1;
+
+        if (isActive) {
+          opacity = isTransitioningIn ? 1 : 1;
+          zIndex = 30;
+          scale = isTransitioningIn ? 1.05 : 1;
+        } else if (isTransitioningOut) {
+          opacity = 0;
+          zIndex = 20;
+          scale = direction === "next" ? 0.95 : 1.05;
+        } else {
+          opacity = 0;
+          zIndex = 10;
+        }
+
+        return (
           <div
-            key={index}
-            className="w-full flex-shrink-0 relative"
-            style={{ height: "100vh" }}
+            key={`slide-${index}`}
+            className="absolute inset-0 w-full h-full"
+            style={{
+              zIndex,
+              opacity,
+              transform: `scale(${scale})`,
+              transition: "opacity 700ms cubic-bezier(0.4, 0, 0.2, 1), transform 700ms cubic-bezier(0.4, 0, 0.2, 1)",
+              willChange: "opacity, transform"
+            }}
           >
             <img
-              src={slide}
-              alt={`Slide ${index}`}
+              src={getImageSrc(slide)}
+              alt={`Slide ${index + 1}`}
               className="w-full h-full object-cover"
+              loading={index <= 1 ? "eager" : "lazy"}
+              onError={(e) => {
+                console.error(`Failed to load image: ${getImageSrc(slide)}`);
+                e.target.style.opacity = '0';
+              }}
+              onLoad={(e) => {
+                e.target.style.opacity = '1';
+              }}
+              style={{
+                transition: 'opacity 300ms ease-in-out'
+              }}
             />
-            {/* Vignette overlay */}
-            <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,_rgba(0,0,0,0.2)_0%,_rgba(0,0,0,0.5)_70%,_rgba(0,0,0,0.7)_100%)]"></div>
+            {/* Gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/30 to-black/60" />
           </div>
-        ))}
+        );
+      })}
+
+      {/* Navigation Buttons */}
+      <div className="absolute inset-0 flex items-center justify-between px-6 pointer-events-none z-40">
+        <button
+          onClick={prevSlide}
+          className="pointer-events-auto w-12 h-12 rounded-full bg-black/40 hover:bg-black/60 backdrop-blur-sm flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 border border-white/20"
+          aria-label="Previous slide"
+        >
+          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+
+        <button
+          onClick={nextSlide}
+          className="pointer-events-auto w-12 h-12 rounded-full bg-black/40 hover:bg-black/60 backdrop-blur-sm flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 border border-white/20"
+          aria-label="Next slide"
+        >
+          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
       </div>
 
-      {/* Arrows */}
-      <button
-        onClick={prevSlide}
-        className="absolute inset-y-0 left-0 flex items-center justify-center w-12 text-white hover:bg-black/20 rounded-l-lg z-10"
-      >
-        <span className="text-2xl">&larr;</span>
-      </button>
-      <button
-        onClick={nextSlide}
-        className="absolute inset-y-0 right-0 flex items-center justify-center w-12 text-white hover:bg-black/20 rounded-r-lg z-10"
-      >
-        <span className="text-2xl">&rarr;</span>
-      </button>
-
-      {/* Dots */}
-      <div className="absolute bottom-5 left-0 right-0 flex justify-center gap-2 z-10">
-        {slides.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentIndex(index + 1)}
-            className={`w-3 h-3 rounded-full border border-white ${
-              currentIndex === index + 1 ? "bg-white" : "bg-white/50"
-            }`}
-          ></button>
-        ))}
+      {/* Dots Indicator */}
+      <div className="absolute bottom-6 left-0 right-0 flex justify-center items-center gap-2 z-40">
+        {slides.map((_, index) => {
+          const isActive = index === currentIndex;
+          
+          return (
+            <button
+              key={index}
+              onClick={() => goToSlide(index)}
+              className={`pointer-events-auto h-2 rounded-full transition-all duration-500 ease-out ${
+                isActive ? "bg-white w-8" : "bg-white/40 w-2 hover:bg-white/60"
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          );
+        })}
       </div>
     </div>
   );
