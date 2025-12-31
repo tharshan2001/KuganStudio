@@ -9,7 +9,7 @@ import Card2 from "../components/home/Card2";
 import img1 from "../assets/caro1.jpeg";
 import img2 from "../assets/caro2.jpeg";
 import img3 from "../assets/img3.jpeg";
-import img4 from "../assets/img4.jpeg";
+import img4 from "../assets/caro3.jpeg";
 import img5 from "../assets/caro4.jpeg";
 
 
