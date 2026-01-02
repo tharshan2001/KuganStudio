@@ -35,7 +35,7 @@ const BlogCard = ({
           <h1 className="text-7xl text-gray-600 leading-tight">{titleTop}</h1>
           <h1 className="text-3xl text-gray-600">{labelOne}</h1>
           <h1 className="text-3xl text-gray-600">{labelTwo}</h1>
-          <h1 className="text-7xl text-gray-600">{titleBottom}</h1>
+          <h1 className="text-6xl text-gray-600">{titleBottom}</h1>
           <p className="text-2xl text-gray-600 font-light mt-8 leading-relaxed">
             {description}
           </p>

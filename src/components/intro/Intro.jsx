@@ -159,7 +159,7 @@ export default function Intro({ onFinish }) {
         </AnimatePresence>
 
         {/* Text */}
-        <AnimatePresence>
+        {/* <AnimatePresence>
           {showText && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -175,7 +175,7 @@ export default function Intro({ onFinish }) {
               </span>
             </motion.div>
           )}
-        </AnimatePresence>
+        </AnimatePresence> */}
       </div>
     </div>
   );

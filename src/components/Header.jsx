@@ -7,6 +7,8 @@ import Image from "next/image";
 import logo from "../../public/logoW.png";
 
 const navItems = [
+    { label: "Home", href: "/" },
+
   { label: "Gallery", href: "/gallery" },
   { label: "Store", href: "/store" },
   { label: "About Us", href: "/about" },
