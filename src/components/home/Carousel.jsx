@@ -1,29 +1,31 @@
 "use client";
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
+import { WritingText } from "../../components/home/WritingText";
+import { motion } from "framer-motion";
+
+// Helper to convert a string to camelCase
+const toPascalCase = (str) => {
+  return str
+    .split(" ")
+    .map(
+      (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+    )
+    .join("");
+};
+
 
 const Carousel = ({ slides, autoPlay = true, autoPlayInterval = 3000 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [previousIndex, setPreviousIndex] = useState(-1);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [direction, setDirection] = useState("next");
-  
+
   const timeoutRef = useRef(null);
-  const containerRef = useRef(null);
-
   const totalSlides = slides.length;
-
-  // Helper function to get the actual image source
-  const getImageSrc = (slide) => {
-    if (typeof slide === 'string') return slide;
-    if (slide?.src) return slide.src;
-    if (slide?.default) return slide.default;
-    return slide;
-  };
 
   const nextSlide = useCallback(() => {
     if (isTransitioning) return;
-    
     setDirection("next");
     setIsTransitioning(true);
     setPreviousIndex(currentIndex);
@@ -32,168 +34,132 @@ const Carousel = ({ slides, autoPlay = true, autoPlayInterval = 3000 }) => {
 
   const prevSlide = useCallback(() => {
     if (isTransitioning) return;
-    
     setDirection("prev");
     setIsTransitioning(true);
     setPreviousIndex(currentIndex);
     setCurrentIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
   }, [currentIndex, totalSlides, isTransitioning]);
 
-  const goToSlide = useCallback((index) => {
-    if (isTransitioning || index === currentIndex) return;
-    
-    const newDirection = index > currentIndex ? "next" : "prev";
-    setDirection(newDirection);
-    setIsTransitioning(true);
-    setPreviousIndex(currentIndex);
-    setCurrentIndex(index);
-  }, [currentIndex, isTransitioning]);
+  const goToSlide = useCallback(
+    (index) => {
+      if (isTransitioning || index === currentIndex) return;
+      setDirection(index > currentIndex ? "next" : "prev");
+      setIsTransitioning(true);
+      setPreviousIndex(currentIndex);
+      setCurrentIndex(index);
+    },
+    [currentIndex, isTransitioning]
+  );
 
-  // Auto-play
+  // Auto play
   useEffect(() => {
     if (!autoPlay || isTransitioning) return;
-    
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    
-    timeoutRef.current = setTimeout(() => {
-      nextSlide();
-    }, autoPlayInterval);
-
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
+    timeoutRef.current = setTimeout(nextSlide, autoPlayInterval);
+    return () => clearTimeout(timeoutRef.current);
   }, [currentIndex, autoPlay, autoPlayInterval, nextSlide, isTransitioning]);
 
-  // Handle transition end
+  // End transition
   useEffect(() => {
     if (!isTransitioning) return;
-
-    const timer = setTimeout(() => {
-      setIsTransitioning(false);
-    }, 700); // Match transition duration
-
+    const timer = setTimeout(() => setIsTransitioning(false), 700);
     return () => clearTimeout(timer);
   }, [isTransitioning]);
 
-  // Preload next and previous images
-  useEffect(() => {
-    const nextIndex = (currentIndex + 1) % totalSlides;
-    const prevIndex = (currentIndex - 1 + totalSlides) % totalSlides;
-    
-    const preloadImage = (index) => {
-      const img = new Image();
-      img.src = getImageSrc(slides[index]);
-    };
-    
-    preloadImage(nextIndex);
-    preloadImage(prevIndex);
-  }, [currentIndex, slides, totalSlides]);
-
   return (
-    <div 
-      ref={containerRef}
-      className="relative w-full h-screen bg-black overflow-hidden"
-    >
-      {/* Background color to prevent white flashes */}
-      <div className="absolute inset-0 bg-black z-0" />
-      
-      {/* All slides for cross-fade */}
+    <div className="relative w-full h-screen overflow-hidden bg-black">
       {slides.map((slide, index) => {
         const isActive = index === currentIndex;
         const wasActive = index === previousIndex;
-        const isTransitioningOut = isTransitioning && wasActive;
-        const isTransitioningIn = isTransitioning && isActive;
 
         let opacity = 0;
         let zIndex = 0;
         let scale = 1;
 
         if (isActive) {
-          opacity = isTransitioningIn ? 1 : 1;
+          opacity = 1;
           zIndex = 30;
-          scale = isTransitioningIn ? 1.05 : 1;
-        } else if (isTransitioningOut) {
+          scale = 1.05;
+        } else if (wasActive) {
           opacity = 0;
           zIndex = 20;
           scale = direction === "next" ? 0.95 : 1.05;
-        } else {
-          opacity = 0;
-          zIndex = 10;
         }
 
         return (
           <div
-            key={`slide-${index}`}
-            className="absolute inset-0 w-full h-full"
-            style={{
-              zIndex,
-              opacity,
-              transform: `scale(${scale})`,
-              transition: "opacity 700ms cubic-bezier(0.4, 0, 0.2, 1), transform 700ms cubic-bezier(0.4, 0, 0.2, 1)",
-              willChange: "opacity, transform"
-            }}
+            key={index}
+            className="absolute inset-0 w-full h-full transition-all duration-700"
+            style={{ opacity, zIndex, transform: `scale(${scale})` }}
           >
+            {/* Image */}
             <img
-              src={getImageSrc(slide)}
+              src={slide.src}
               alt={`Slide ${index + 1}`}
               className="w-full h-full object-cover"
-              loading={index <= 1 ? "eager" : "lazy"}
-              onError={(e) => {
-                console.error(`Failed to load image: ${getImageSrc(slide)}`);
-                e.target.style.opacity = '0';
-              }}
-              onLoad={(e) => {
-                e.target.style.opacity = '1';
-              }}
-              style={{
-                transition: 'opacity 300ms ease-in-out'
-              }}
             />
-            {/* Gradient overlay */}
+
+            {/* Gradient */}
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/30 to-black/60" />
+
+            {/* Text Container */}
+            {isActive && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center top-20 z-40 px-6">
+                {/* Main Text slides up */}
+                <WritingText
+                  text={slide.text}
+                  className="text-white text-4xl md:text-5xl text-center tracking-[10px]"
+                  spacing={14}
+                  transition={{
+                    duration: 1.8,
+                    delay: 0.6,
+                    type: "spring",
+                    bounce: 0,
+                  }}
+                />
+
+                {/* Subtext pops in below main text */}
+                {slide.subText && (
+                  <motion.span
+                    className="text-white/70 text-lg md:text-1xl text-center mt-9 normal-case"
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{
+                      type: "spring",
+                      duration: 0.8,
+                      bounce: 0.01,
+                      delay: 0.4,
+                    }}
+                  >
+                    {toPascalCase(slide.subText)}
+                  </motion.span>
+                )}
+              </div>
+            )}
           </div>
         );
       })}
 
-      {/* Navigation Buttons */}
-      <div className="absolute inset-0 flex items-center justify-between px-6 pointer-events-none z-40">
-        <button
-          onClick={prevSlide}
-          className="pointer-events-auto w-12 h-12 rounded-full bg-black/40 hover:bg-black/60 backdrop-blur-sm flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 border border-white/20"
-          aria-label="Previous slide"
-        >
-          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
-          </svg>
+      {/* Navigation */}
+      <div className="absolute inset-0 flex items-center justify-between px-6 z-50">
+        <button onClick={prevSlide} className="text-white text-3xl">
+          ‹
         </button>
-
-        <button
-          onClick={nextSlide}
-          className="pointer-events-auto w-12 h-12 rounded-full bg-black/40 hover:bg-black/60 backdrop-blur-sm flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 border border-white/20"
-          aria-label="Next slide"
-        >
-          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-          </svg>
+        <button onClick={nextSlide} className="text-white text-3xl">
+          ›
         </button>
       </div>
 
-      {/* Dots Indicator */}
-      <div className="absolute bottom-6 left-0 right-0 flex justify-center items-center gap-2 z-40">
-        {slides.map((_, index) => {
-          const isActive = index === currentIndex;
-          
-          return (
-            <button
-              key={index}
-              onClick={() => goToSlide(index)}
-              className={`pointer-events-auto h-2 rounded-full transition-all duration-500 ease-out ${
-                isActive ? "bg-white w-8" : "bg-white/40 w-2 hover:bg-white/60"
-              }`}
-              aria-label={`Go to slide ${index + 1}`}
-            />
-          );
-        })}
+      {/* Dots */}
+      <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2 z-50">
+        {slides.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => goToSlide(index)}
+            className={`h-2 rounded-full transition-all ${
+              index === currentIndex ? "bg-white w-8" : "bg-white/40 w-2"
+            }`}
+          />
+        ))}
       </div>
     </div>
   );

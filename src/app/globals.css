@@ -5,6 +5,10 @@
   --foreground: #171717;
 }
 
+.font-elegant {
+  font-family: var(--font-playfair), serif;
+}
+
 /* Optional theme overrides */
 @theme inline {
   --color-background: var(--background);
