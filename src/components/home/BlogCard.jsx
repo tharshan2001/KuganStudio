@@ -1,3 +1,7 @@
+"use client";
+
+import React from "react";
+
 const BlogCard = ({
   heading,
   subHeading,
@@ -21,7 +25,7 @@ const BlogCard = ({
       </div>
 
       <div className="flex flex-col lg:flex-row">
-        {/* LEFT CONTENT */}
+        {/* LEFT TEXT CONTENT */}
         <div
           className="w-full lg:w-1/3 p-10 prose"
           data-aos="fade-up"
@@ -37,7 +41,7 @@ const BlogCard = ({
           </p>
         </div>
 
-        {/* RIGHT IMAGE GRID */}
+        {/* RIGHT IMAGE GRID — SAME AS MEDIACARD */}
         <div
           className="w-full lg:w-2/3 py-8 px-10 grid grid-cols-4 gap-4"
           data-aos="fade-up"
@@ -48,7 +52,7 @@ const BlogCard = ({
             <div key={index} className={`h-64 relative ${img.colSpan}`}>
               <img
                 src={img.src}
-                alt={img.alt}
+                alt={img.alt || "image"}
                 className={`absolute inset-0 h-full w-full object-cover ${img.rounded}`}
               />
             </div>

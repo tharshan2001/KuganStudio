@@ -10,11 +10,29 @@ export default function IntroManager({ children }) {
   useEffect(() => {
     setHydrated(true);
 
-    const seenIntro = localStorage.getItem("seenIntro");
-    if (!seenIntro) setShowIntro(true);
+    const lastSeen = localStorage.getItem("seenIntro");
+    const now = Date.now();
+
+    // Show intro if never seen or 24 hours have passed
+    if (!lastSeen || now - Number(lastSeen) > 24 * 60 * 60 * 1000) {
+      setShowIntro(true);
+    }
   }, []);
 
-  if (!hydrated) return null; // wait for client-side hydration
+  const handleIntroFinish = () => {
+    localStorage.setItem("seenIntro", Date.now().toString());
+    setShowIntro(false);
+  };
 
-  return <>{showIntro ? <Intro onFinish={() => setShowIntro(false)} /> : children}</>;
+  if (!hydrated) return null;
+
+  return (
+    <>
+      {/* Intro overlay */}
+      {showIntro && <Intro onFinish={handleIntroFinish} />}
+
+      {/* Main page content */}
+      {children}
+    </>
+  );
 }

@@ -40,11 +40,11 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-100 transition-all duration-300
+      className={`fixed top-0 left-0 w-full z-100 transition-all duration-300 
         ${
           isHome
             ? scrolled
-              ? "bg-black/70 shadow-lg"
+              ? "bg-white/90 shadow-lg border-b-1px border-gray/50"
               : "bg-transparent"
             : "bg-black shadow-lg"
         }
@@ -53,7 +53,7 @@ export default function Header() {
       <nav className="container mx-auto px-4 py-4 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="relative inline-block">
-          <div className="absolute inset-0 rounded-full bg-black/40 blur-xl"></div>
+          <div className="absolute inset-0 rounded-full bg-black/10 blur-xl"></div>
           <Image
             src={logo}
             alt="Frame Studio Logo"
@@ -68,16 +68,16 @@ export default function Header() {
             <li key={index} className="relative group">
               <Link
                 href={item.href}
-                className={`font-semibold text-l uppercase transition-colors duration-200
+                className={`font-normal uppercase transition-colors duration-200
                   ${
-                    scrolled || !isHome
-                      ? "text-white hover:text-[#F2CC0F] hover:drop-shadow-[0_0_10px_white]"
-                      : "text-white hover:text-[#F2CC0F]"
+                    scrolled
+                      ? "text-black/90 "
+                      : "text-white "
                   }
                 `}
               >
                 {item.label}
-                <div className="h-1 mt-1 w-0 group-hover:w-full transition-all duration-300 bg-white" />
+                <div className="h-0.5 mt-1 w-0 group-hover:w-full transition-all duration-300 bg-white" />
               </Link>
             </li>
           ))}
@@ -88,7 +88,7 @@ export default function Header() {
           <Link
             href="/book-us"
             className="px-6 py-2 text-l uppercase rounded-full transition-all duration-300 hover:shadow-lg"
-            style={{ backgroundColor: "#F2CC0F", color: "#212121" }}
+            style={{ backgroundColor: "#f2e017ff", color: "#212121" }}
           >
             Book Us
           </Link>
@@ -149,7 +149,7 @@ export default function Header() {
                   href="/book-us"
                   onClick={() => setMobileOpen(false)}
                   className="block w-full text-center px-6 py-3 text-lg font-semibold uppercase rounded-full transition-all duration-300"
-                  style={{ backgroundColor: "#F2CC0F", color: "#212121" }}
+                  style={{ backgroundColor: "#ffffff", color: "#212121" }}
                 >
                   Book Us
                 </Link>

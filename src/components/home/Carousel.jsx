@@ -14,7 +14,6 @@ const toPascalCase = (str) => {
     .join("");
 };
 
-
 const Carousel = ({ slides, autoPlay = true, autoPlayInterval = 3000 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [previousIndex, setPreviousIndex] = useState(-1);
@@ -103,11 +102,23 @@ const Carousel = ({ slides, autoPlay = true, autoPlayInterval = 3000 }) => {
 
             {/* Text Container */}
             {isActive && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center top-20 z-40 px-6">
-                {/* Main Text slides up */}
+              <div
+                className="
+                  absolute inset-0 z-40
+                  flex flex-col items-center justify-center
+                  px-4 sm:px-6 md:px-10   // RESPONSIVE
+                  pt-24 sm:pt-28 md:pt-20 // RESPONSIVE
+                  text-center
+                "
+              >
+                {/* Main Text */}
                 <WritingText
                   text={slide.text}
-                  className="text-white text-4xl md:text-5xl text-center tracking-[10px]"
+                  className="
+                    text-white
+                    text-2xl sm:text-3xl md:text-5xl lg:text-6xl  // RESPONSIVE
+                    tracking-[6px] sm:tracking-[8px] md:tracking-[10px]
+                  "
                   spacing={14}
                   transition={{
                     duration: 1.8,
@@ -117,10 +128,16 @@ const Carousel = ({ slides, autoPlay = true, autoPlayInterval = 3000 }) => {
                   }}
                 />
 
-                {/* Subtext pops in below main text */}
+                {/* Subtext */}
                 {slide.subText && (
                   <motion.span
-                    className="text-white/70 text-lg md:text-1xl text-center mt-9 normal-case"
+                    className="
+                      text-white/70
+                      text-sm sm:text-base md:text-lg   // RESPONSIVE
+                      mt-4 sm:mt-6 md:mt-9               // RESPONSIVE
+                      max-w-xs sm:max-w-md md:max-w-xl   // RESPONSIVE
+                      normal-case
+                    "
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{
@@ -140,23 +157,31 @@ const Carousel = ({ slides, autoPlay = true, autoPlayInterval = 3000 }) => {
       })}
 
       {/* Navigation */}
-      <div className="absolute inset-0 flex items-center justify-between px-6 z-50">
-        <button onClick={prevSlide} className="text-white text-3xl">
+      <div className="absolute inset-0 flex items-center justify-between px-3 sm:px-6 z-50">
+        <button
+          onClick={prevSlide}
+          className="text-white text-2xl sm:text-3xl md:text-4xl"
+        >
           ‹
         </button>
-        <button onClick={nextSlide} className="text-white text-3xl">
+        <button
+          onClick={nextSlide}
+          className="text-white text-2xl sm:text-3xl md:text-4xl"
+        >
           ›
         </button>
       </div>
 
       {/* Dots */}
-      <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2 z-50">
+      <div className="absolute bottom-4 sm:bottom-6 left-0 right-0 flex justify-center gap-2 z-50">
         {slides.map((_, index) => (
           <button
             key={index}
             onClick={() => goToSlide(index)}
             className={`h-2 rounded-full transition-all ${
-              index === currentIndex ? "bg-white w-8" : "bg-white/40 w-2"
+              index === currentIndex
+                ? "bg-white w-6 sm:w-8"
+                : "bg-white/40 w-2"
             }`}
           />
         ))}

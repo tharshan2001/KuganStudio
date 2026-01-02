@@ -8,11 +8,40 @@ import c3 from "../../assets/c3.png";
 
 const Card2 = () => {
   const mediaItems = [
-    { src: "/videos/vd1.mp4", type: "video", colSpan: "col-span-2", rounded: "rounded-lg" },
-    { src: c1.src, type: "image", colSpan: "col-span-1", rounded: "rounded-lg", alt: "Image 1" },
-    { src: c2.src, type: "image", colSpan: "col-span-1", rounded: "rounded-lg", alt: "Image 2" },
-    { src: c3.src, type: "image", colSpan: "col-span-1", rounded: "rounded-lg", alt: "Image 3" },
-    { src: "/videos/vd2.mp4", type: "video", colSpan: "col-span-3", rounded: "rounded-lg" },
+    {
+      src: c1.src,
+      type: "image",
+      colSpan: "col-span-1",
+      rounded: "rounded-lg",
+      alt: "Image 1",
+    },
+
+    {
+      src: "/videos/vd1.mp4",
+      type: "video",
+      colSpan: "col-span-2",
+      rounded: "rounded-lg",
+    },
+    {
+      src: c2.src,
+      type: "image",
+      colSpan: "col-span-1",
+      rounded: "rounded-lg",
+      alt: "Image 2",
+    },
+    {
+      src: c3.src,
+      type: "image",
+      colSpan: "col-span-1",
+      rounded: "rounded-lg",
+      alt: "Image 3",
+    },
+    {
+      src: "/videos/vd2.mp4",
+      type: "video",
+      colSpan: "col-span-3",
+      rounded: "rounded-lg",
+    },
   ];
 
   return (
