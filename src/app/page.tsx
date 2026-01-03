@@ -6,6 +6,7 @@ import Carousel from "../components/home/Carousel";
 import Card1 from "../components/home/Card1";
 import Card2 from "../components/home/Card2";
 import ReachOut from "../components/home/ReachOut";
+
 import FrameCard from "../components/home/FrameCard";
 
 import img1 from "../assets/caro1.jpeg";
@@ -57,7 +58,6 @@ const Page = () => {
         description="Choose from classic, coloured, designer, and premium wall frames — personalised, professionally printed, and delivered to your doorstep."
         image={fra}
       />
-
       <ReachOut />
     </>
   );
