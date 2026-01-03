@@ -34,7 +34,7 @@ const FrameCard = ({
         </div>
 
         {/* RIGHT IMAGE */}
-        <div className="lg:w-1/2 relative h-96 w-full overflow-hidden">
+        <div className="lg:w-1/2 relative h-100 w-full overflow-hidden">
           <img
             src={image.src}
             alt={image.alt || "Frame Image"}

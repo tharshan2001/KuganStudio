@@ -1,22 +1,25 @@
 @import "tailwindcss";
 
+/* src/app/globals.css */
+
+/* === Base styles === */
 :root {
   --background: #ffffff;
-  --foreground: #ffffff;
+  --foreground: #000000;
 }
 
-.font-elegant {
-  font-family: var(--font-playfair), serif;
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;         /* Prevent horizontal scrollbar */
+  overscroll-behavior: none;  /* Avoid scroll chaining */
+  scroll-behavior: smooth;    /* Smooth scrolling */
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Optional theme overrides */
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
+/* === Dark mode === */
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
@@ -24,49 +27,41 @@
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-
-  /* Fix body shaking/scroll jumping */
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;         /* Prevent horizontal scrollbar */
-  overscroll-behavior: none;  /* Avoid scroll chaining */
-  scroll-behavior: smooth;    /* Smooth scrolling */
-}
-
-/* === Scrollbar for Webkit browsers === */
+/* === Scrollbar for WebKit browsers (Chrome, Edge, Safari) === */
 ::-webkit-scrollbar {
-  width: 6px;        /* smaller vertical scrollbar */
-  height: 6px;       /* smaller horizontal scrollbar */
+  width: 8px;
+  height: 4px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent; /* Track is invisible */
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: rgba(100, 100, 100, 0.4); /* slightly lighter thumb */
-  border-radius: 8px;
-  border: 1px solid transparent; /* Optional padding effect */
+  background-color: #ef4444; /* red-500 */
+  border-radius: 4px;
+  border: 1px solid transparent;
   transition: background-color 0.2s ease;
+  
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(100, 100, 100, 0.6); /* hover effect */
+  background-color: #720000; /* red-800 */
 }
 
 /* === Firefox Scrollbar === */
 * {
-  scrollbar-width: thin;  /* Thin scrollbar */
-  scrollbar-color: rgba(100, 100, 100, 0.4) transparent; /* thumb + track */
+  scrollbar-width: thin;
+  scrollbar-color: #f9f108 transparent;
 }
 
-/* Optional: prevent layout shift for sticky headers */
+/* === Optional: prevent layout shift for sticky headers === */
 header.sticky {
-  transform: translateZ(0); /* force GPU layer to avoid shaking */
+  transform: translateZ(0);
   backface-visibility: hidden;
 }
 
+/* === Optional: Elegant font example === */
+.font-elegant {
+  font-family: 'Playfair Display', serif;
+}

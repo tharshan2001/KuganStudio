@@ -15,7 +15,6 @@ import img4 from "../assets/caro3.jpeg";
 import img5 from "../assets/caro5.png";
 import fra from "../assets/fra.png";
 
-
 const Page = () => {
   const slides = [
     {
@@ -46,7 +45,7 @@ const Page = () => {
   ];
 
   return (
-    <div className="top-0">
+    <>
       <Header />
       <Carousel slides={slides} autoPlay autoPlayInterval={6000} />
       <Card1 />
@@ -60,7 +59,7 @@ const Page = () => {
       />
 
       <ReachOut />
-    </div>
+    </>
   );
 };
 
