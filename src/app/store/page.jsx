@@ -1,12 +1,13 @@
 "use client";
 
 import React from "react";
-import ProductList from "../../components/product/ProductList";
+import FrameCarousel from "./FramesCarousel";
 
 const page = () => {
   return (
     <div className="fl">
-      <ProductList />
+
+      <FrameCarousel/>
     </div>
   );
 };

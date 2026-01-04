@@ -70,7 +70,7 @@ export default function Header() {
             <li key={index} className="relative group">
               <Link
                 href={item.href}
-                className={`font-normal uppercase transition-colors duration-200
+                className={`font-[5px] uppercase transition-colors duration-200
                   ${
                     scrolled
                       ? "text-black/90 "
