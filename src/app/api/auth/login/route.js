@@ -10,27 +10,38 @@ export async function POST(req) {
   try {
     const { email, password } = await req.json()
     if (!email || !password)
-      return new Response(JSON.stringify({ message: "Email and password required" }), { status: 400 })
+      return new Response(
+        JSON.stringify({ message: "Email and password required" }),
+        { status: 400 }
+      )
 
     await connectDB()
     const user = await User.findOne({ email })
     if (!user)
-      return new Response(JSON.stringify({ message: "Invalid credentials" }), { status: 401 })
+      return new Response(
+        JSON.stringify({ message: "Invalid credentials" }),
+        { status: 401 }
+      )
 
     const isMatch = await bcrypt.compare(password, user.password)
     if (!isMatch)
-      return new Response(JSON.stringify({ message: "Invalid credentials" }), { status: 401 })
+      return new Response(
+        JSON.stringify({ message: "Invalid credentials" }),
+        { status: 401 }
+      )
 
+    // Create JWT token
     const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, { expiresIn: "7d" })
 
-    // ✅ Await cookies() before using
-    const cookieStore = await cookies()
+    // ✅ Set HttpOnly cookie
+    const cookieStore = cookies()
     cookieStore.set({
       name: "token",
       value: token,
       httpOnly: true,
       path: "/",
-      maxAge: 7 * 24 * 60 * 60 // 7 days
+      maxAge: 7 * 24 * 60 * 60, // 7 days
+      sameSite: "strict"
     })
 
     return new Response(JSON.stringify({ message: "Login successful" }), { status: 200 })

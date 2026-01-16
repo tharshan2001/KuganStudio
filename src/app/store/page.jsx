@@ -1,15 +1,13 @@
-"use client";
+import FrameGrid from "@/components/frames/FrameGrid";
+import ProductHero from "@/components/product/ProductHero";
 
-import ProductHero from "../../components/product/ProductHero";
-
-const page = () => {
+export default function StorePage() {
   return (
-    <div className="fl">
-
-      <ProductHero/>
-
+    <div className="">
+      <ProductHero />
+     <div className="p-15">
+       <FrameGrid />
+     </div>
     </div>
   );
-};
-
-export default page;
+}
