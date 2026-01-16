@@ -1,5 +1,5 @@
 import { connectDB } from "@/lib/mongodb"
-import User from "@/lib/userModel"
+import User from "../../../../lib/model/userModel"
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
 import { cookies } from "next/headers"
@@ -21,10 +21,19 @@ export async function POST(req) {
 
     const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, { expiresIn: "7d" })
 
-    cookies().set({ name: "token", value: token, httpOnly: true, path: "/", maxAge: 7 * 24 * 60 * 60 })
+    // ✅ Await the cookies() before using
+    const cookieStore = await cookies()
+    cookieStore.set({
+      name: "token",
+      value: token,
+      httpOnly: true,
+      path: "/",
+      maxAge: 7 * 24 * 60 * 60 // 7 days
+    })
 
     return new Response(JSON.stringify({ message: "Signup successful" }), { status: 201 })
   } catch (err) {
+    console.error(err)
     return new Response(JSON.stringify({ message: "Server error" }), { status: 500 })
   }
 }

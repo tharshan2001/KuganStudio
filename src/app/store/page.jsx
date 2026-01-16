@@ -1,7 +1,5 @@
 "use client";
 
-import React from "react";
-import FrameCarousel from "./FramesCarousel";
 import ProductHero from "../../components/product/ProductHero";
 
 const page = () => {
@@ -10,7 +8,6 @@ const page = () => {
 
       <ProductHero/>
 
-      <FrameCarousel/>
     </div>
   );
 };
