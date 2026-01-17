@@ -6,7 +6,7 @@ import { verifyToken } from "@/lib/auth";
 export default async function AdminLayout({ children }) {
   const user = await verifyToken();
 
-  if (!user) redirect("/admin/auth/login");
+  if (!user) redirect("/login");
 
   return (
     <div>
