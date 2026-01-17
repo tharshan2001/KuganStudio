@@ -13,55 +13,103 @@ const MediaCard = ({
   images,
 }) => {
   return (
-    <section className="max-w-7xl mx-auto py-6 sm:px-6 sm:py-12 md:px-12 md:py-24">
-      {/* SECTION HEADER */}
-      <div className="text-center mb-20">
-        <h2 className="text-5xl font-semibold text-gray-700 tracking-tight">{heading}</h2>
-        <p className="mt-4 text-xl text-gray-500 font-light">{subHeading}</p>
+    <section className="max-w-6xl mx-auto py-8 md:py-16 px-4 md:px-8">
+      {/* HEADER - Left aligned */}
+      <div className="mb-12 md:mb-16">
+        <h2 className="text-3xl md:text-4xl font-medium text-gray-800 max-w-2xl">
+          {heading}
+        </h2>
+        <p className="mt-3 text-base md:text-lg text-gray-500 max-w-xl">
+          {subHeading}
+        </p>
       </div>
 
-      <div className="flex flex-col lg:flex-row">
-        {/* LEFT IMAGE/VIDEO GRID */}
-        <div
-          className="w-full lg:w-2/3 py-8 px-10 grid grid-cols-4 gap-4"
-          data-aos="fade-up"
-          data-aos-duration="1000"
-          data-aos-delay="100"
-        >
-          {images.map((item, index) => (
-            <div key={index} className={`h-64 relative ${item.colSpan}`}>
-              {item.type === "video" ? (
-                <video
-                  src={item.src}
-                  className={`absolute inset-0 h-full w-full object-cover ${item.rounded}`}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                />
-              ) : (
-                <img
-                  src={item.src}
-                  alt={item.alt || "image"}
-                  className={`absolute inset-0 h-full w-full object-cover ${item.rounded}`}
-                />
-              )}
+      <div className="flex flex-col lg:flex-row gap-8 md:gap-10">
+        {/* IMAGE GRID - Asymmetrical stack */}
+        <div className="w-full lg:w-3/5">
+          <div className="grid grid-cols-5 grid-rows-6 gap-3 md:gap-4 h-[500px] md:h-[600px]">
+            
+            {/* Large left column */}
+            <div className="col-span-3 row-span-4 rounded-lg overflow-hidden">
+              <img
+                src={images[0].src}
+                alt={images[0].alt || "image"}
+                className="h-full w-full object-cover"
+              />
             </div>
-          ))}
+
+            {/* Top right small */}
+            <div className="col-span-2 row-span-2 col-start-4 rounded-lg overflow-hidden">
+              <video
+                src={images[1].src}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="h-full w-full object-cover"
+              />
+            </div>
+
+            {/* Bottom right tall */}
+            <div className="col-span-2 row-span-4 col-start-4 row-start-3 rounded-lg overflow-hidden">
+              <img
+                src={images[3].src}
+                alt={images[3].alt || "image"}
+                className="h-full w-full object-cover"
+              />
+            </div>
+
+            {/* Wide bottom */}
+            <div className="col-span-3 row-span-2 row-start-5 rounded-lg overflow-hidden">
+              <video
+                src={images[2].src}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="h-full w-full object-cover"
+              />
+            </div>
+
+          </div>
         </div>
 
-        {/* RIGHT TEXT CONTENT */}
-        <div
-          className="w-full lg:w-1/3 p-10 prose"
-          data-aos="fade-up"
-          data-aos-duration="1000"
-          data-aos-delay="100"
-        >
-          <h1 className="text-7xl text-gray-600 leading-tight">{titleTop}</h1>
-          <h1 className="text-3xl text-gray-600">{labelOne}</h1>
-          <h1 className="text-3xl text-gray-600">{labelTwo}</h1>
-          <h1 className="text-7xl text-gray-600">{titleBottom}</h1>
-          <p className="text-2xl text-gray-600 font-light mt-8 leading-relaxed">{description}</p>
+        {/* TEXT CONTENT - Right sidebar */}
+        <div className="w-full lg:w-2/5">
+          <div className="space-y-4">
+            <div>
+              <h1 className="text-4xl md:text-5xl text-gray-700 font-light leading-tight">
+                {titleTop}
+              </h1>
+            </div>
+
+            <div className="space-y-3">
+              <div className="flex items-center gap-3">
+                <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
+                <h2 className="text-xl md:text-2xl text-gray-600">
+                  {labelOne}
+                </h2>
+              </div>
+              <div className="flex items-center gap-3 ml-4">
+                <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
+                <h2 className="text-xl md:text-2xl text-gray-600">
+                  {labelTwo}
+                </h2>
+              </div>
+            </div>
+
+            <div>
+              <h1 className="text-4xl md:text-5xl text-gray-700 font-light">
+                {titleBottom}
+              </h1>
+            </div>
+
+            <div className="pt-1">
+              <p className="text-base md:text-lg text-gray-500 leading-relaxed">
+                {description}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </section>

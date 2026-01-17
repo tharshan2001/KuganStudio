@@ -48,11 +48,11 @@ export default function Header() {
             ? scrolled
               ? "bg-white/90 shadow-lg border-b-1px border-gray/50"
               : "bg-transparent"
-            : "bg-black shadow-lg"
+            : "bg-gray-900  shadow-lg"
         }
       `}
     >
-      <nav className="container mx-auto px-4 py-4 flex items-center justify-between">
+      <nav className="container mx-auto px-4 py-2 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="relative inline-block">
           <div className="absolute inset-0 rounded-full bg-black/10 blur-xl"></div>
@@ -70,7 +70,7 @@ export default function Header() {
             <li key={index} className="relative group">
               <Link
                 href={item.href}
-                className={`font-[5px] uppercase transition-colors duration-200
+                className={`text-[13px] font-semi-bold uppercase transition-colors duration-200
                   ${
                     scrolled
                       ? "text-black/90 "
@@ -89,8 +89,8 @@ export default function Header() {
         <div className="hidden lg:flex">
           <Link
             href="/book-us"
-            className="px-6 py-2 text-l uppercase rounded-full transition-all duration-300 hover:shadow-lg"
-            style={{ backgroundColor: "#f2e017ff", color: "#212121" }}
+            className="px-6 py-2 text-[12px] uppercase rounded-full transition-all duration-300 hover:shadow-lg"
+            style={{ backgroundColor: "#F16D34", color: "#ffffff" }}
           >
             Book Us
           </Link>
@@ -129,7 +129,7 @@ export default function Header() {
 
         {/* Mobile Navigation */}
         {mobileOpen && (
-          <div className="lg:hidden absolute top-full left-0 w-full py-4 border-t border-gray-200 bg-white shadow-md z-50 animate-fadeIn">
+          <div className="lg:hidden absolute top-full right-0 w-[300px] py-1 border-t border-gray-100/10 bg-white/70 z-50 animate-fadeIn">
             <ul className="space-y-2">
               {navItems.map((item, index) => (
                 <li

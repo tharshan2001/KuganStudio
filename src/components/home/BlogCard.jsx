@@ -15,14 +15,14 @@ const BlogCard = ({
   return (
     <section className="max-w-7xl mx-auto py-6 sm:px-6 sm:py-12 md:px-12 md:py-24">
       {/* SECTION HEADER */}
-      <div className="text-center mb-20">
+      {/* <div className="text-center mb-20">
         <h2 className="text-5xl font-semibold text-gray-700 tracking-tight">
           {heading}
         </h2>
         <p className="mt-4 text-xl text-gray-500 font-light">
           {subHeading}
         </p>
-      </div>
+      </div> */}
 
       <div className="flex flex-col lg:flex-row">
         {/* LEFT TEXT CONTENT */}

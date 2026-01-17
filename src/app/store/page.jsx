@@ -3,11 +3,11 @@ import ProductHero from "@/components/product/ProductHero";
 
 export default function StorePage() {
   return (
-    <div className="">
+    <div className="mt-28">
       <ProductHero />
-     <div className="p-15">
-       <FrameGrid />
-     </div>
+      <div className="p-15">
+        <FrameGrid />
+      </div>
     </div>
   );
 }

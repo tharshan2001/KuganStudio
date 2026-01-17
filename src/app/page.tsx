@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import Header from "../components/Header";
 import Carousel from "../components/home/Carousel";
 import Card1 from "../components/home/Card1";
 import Card2 from "../components/home/Card2";
@@ -47,7 +46,6 @@ const Page = () => {
 
   return (
     <>
-      <Header />
       <Carousel slides={slides} autoPlay autoPlayInterval={6000} />
       <Card1 />
       <Card2 />

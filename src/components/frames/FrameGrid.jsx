@@ -25,7 +25,7 @@ export default async function FrameGrid() {
   return (
     // Max-width container to center the grid with side padding
     <section className="max-w-7xl mx-auto px-6 py-12 md:px-10">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-14">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-14">
         {frames.map((frame) => (
           <FrameCard key={frame._id} frame={frame} />
         ))}

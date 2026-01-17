@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import IntroManager from "../components/intro/IntroManager";
+import Header from "../components/Header"; // <-- add your global header
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
@@ -17,7 +18,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           antialiased
         `}
       >
-        <IntroManager>{children}</IntroManager>
+        <IntroManager>
+          {/* Header will appear on all pages */}
+          <Header />
+
+          {/* Page content */}
+          <main>{children}</main>
+        </IntroManager>
       </body>
     </html>
   );

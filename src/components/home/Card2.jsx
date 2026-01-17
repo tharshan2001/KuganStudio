@@ -15,11 +15,16 @@ const Card2 = () => {
       rounded: "rounded-lg",
       alt: "Image 1",
     },
-
     {
       src: "/videos/vd1.mp4",
       type: "video",
       colSpan: "col-span-2",
+      rounded: "rounded-lg",
+    },
+    {
+      src: "/videos/vd2.mp4",
+      type: "video",
+      colSpan: "col-span-3",
       rounded: "rounded-lg",
     },
     {
@@ -28,19 +33,6 @@ const Card2 = () => {
       colSpan: "col-span-1",
       rounded: "rounded-lg",
       alt: "Image 2",
-    },
-    {
-      src: c3.src,
-      type: "image",
-      colSpan: "col-span-1",
-      rounded: "rounded-lg",
-      alt: "Image 3",
-    },
-    {
-      src: "/videos/vd2.mp4",
-      type: "video",
-      colSpan: "col-span-3",
-      rounded: "rounded-lg",
     },
   ];
 
@@ -52,7 +44,9 @@ const Card2 = () => {
       labelOne="Label One"
       labelTwo="Label Two"
       titleBottom="Bottom Title"
-      description="This section displays images and videos using the reusable MediaCard component."
+      description="This section displays image
+      s and videos using the reusable MediaCard component his section displays images and videos using the reusable MediaCard component his section displays images and videos using the reusable MediaCard 
+      component his section displays images and videos using the reusable MediaCard component his section displays images and videos using the reusable MediaCard component."
       images={mediaItems}
     />
   );
